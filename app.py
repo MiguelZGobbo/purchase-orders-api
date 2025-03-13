@@ -44,7 +44,7 @@ def create_get_purchase_order():
 
     return jsonify(purchase_order)
 
-@app.route('/purchase_orders/int:<id>/items')      
+@app.route('/purchase_orders/<int:id>/items')      
 def get_purchase_orders_items(id):
     for po in purchase_orders:
         if po['id'] == id:

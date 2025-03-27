@@ -1,6 +1,6 @@
 from flask import jsonify
 from flask_restful import Resource, reqparse
-from .model import PurchaseOrdermodel
+from .model import PurchaseOrderModel
 
 class PurchaseOrders(Resource):
     parser = reqparse.RequestParser()
@@ -13,20 +13,20 @@ class PurchaseOrders(Resource):
     )
 
     def get(self):
-        purchase_orders = PurchaseOrdermodel.find_all()
+        purchase_orders = PurchaseOrderModel.find_all()
         return [p.as_dict() for p in purchase_orders]
     
     def post(self):
         data = PurchaseOrders.parser.parse_args()
 
-        purchaseorders = PurchaseOrdermodel(**data)
+        purchaseorders = PurchaseOrderModel(**data)
         purchaseorders.save()
 
         return purchaseorders.as_dict()
     
 class PurchaseOrdersById(Resource):
     def get(self, id):
-        purchase_order = PurchaseOrdermodel.find_by_id(id)
+        purchase_order = PurchaseOrderModel.find_by_id(id)
         if purchase_order:
             return purchase_order.as_dict()
 

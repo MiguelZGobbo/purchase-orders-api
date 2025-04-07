@@ -1,11 +1,13 @@
 import json
 
-def test_get_items_purchase_order_id(test_client):
-    response = test_client.get('/purchase_orders/1/items')
+def test_get_items_purchase_order_id(test_client, seed_db):
+    response = test_client.get('/purchase_orders/{}/items'.format(seed_db['purchase_order'].id))
 
     assert response.status_code == 200
     assert len(response.json) == 1
-    assert response.json[0]['id'] == 1
+    assert response.json[0]['id'] == seed_db['items'].id
+    assert response.json[0]['description'] == seed_db['items'].description
+    assert response.json[0]['price'] == seed_db['items'].price
 
 def test_get_items_purchase_order_id_not_found(test_client):
     id = 999

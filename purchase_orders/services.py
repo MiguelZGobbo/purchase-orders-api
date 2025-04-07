@@ -9,10 +9,10 @@ class PurchaseOrdersServices:
     
     def create(self, **kwargs):
         
-        purchaseorders = PurchaseOrderModel(kwargs)
-        purchaseorders.save()
+        purchase_order = PurchaseOrderModel(**kwargs)
+        purchase_order.save()
 
-        return purchaseorders.as_dict()
+        return purchase_order.as_dict()
     
     def find_by_id(self, id):
         purchase_order = PurchaseOrderModel.find_by_id(id)

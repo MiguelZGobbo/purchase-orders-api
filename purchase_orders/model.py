@@ -5,6 +5,7 @@ class PurchaseOrderModel(db.Model):
 
     id  = db.Column(db.Integer, primary_key = True)
     description = db.Column(db.String, nullable = False)
+    quantity = db.Column(db.Integer, nullable = False)
 
     def __init__(self, description):
         self.description = description

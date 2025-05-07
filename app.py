@@ -5,6 +5,7 @@ from purchase_orders.resources import PurchaseOrders, PurchaseOrdersById
 from purchase_orders_items.resources import PurchaseOrdersItems
 from db import db
 from flask_migrate import Migrate
+from flask_jwt_extended import jwt_manager
 
 def create_app():
 
@@ -13,9 +14,11 @@ def create_app():
 
     app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DB_URI']
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    app.config['JWT_SECRET_KEY'] = os.environ['JWT_SECRET_KEY']
 
     db.init_app(app)
 
+    jwt_manager(app) 
 
     with app.app_context():
         db.create_all()

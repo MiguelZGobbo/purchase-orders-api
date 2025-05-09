@@ -2,8 +2,9 @@ from db import db
 from passlib.hash import pbkdf2_sha256
 
 class UserModel(db.Model):
+    __tablename__ = 'users'
 
-    id = db.Column(db.Integer, primary = True)
+    id = db.Column(db.Integer, primary_key = True)
     email = db.Column(db.String(100), nullable = False, unique = True)
     password = db.Column(db.String(300), nullable = False)
 
@@ -18,10 +19,9 @@ class UserModel(db.Model):
         }
     
     @classmethod
-    def find_by_email(cls, _email):
-        return cls.query.filter_by(email = _email).first
+    def find_user_by_email(cls, _email):
+        return cls.query.filter_by(email = _email).first()
     
-    @classmethod
     def save(self):
         db.session.add(self)
         db.session.commit()

@@ -10,4 +10,5 @@ __pypackages__/
 
 .env
 .venv
-.env.*
+.env.development
+.env.testing

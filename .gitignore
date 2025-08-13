@@ -1,16 +1,22 @@
-__pycache__/
-*.py[cod]
-*$py.class
+"""Configuração de arquivos e diretórios a serem ignorados pelo Git.
 
-__pypackages__/
+Define padrões para excluir arquivos temporários, caches, ambientes virtuais
+e configurações locais do controle de versão, garantindo que apenas arquivos
+relevantes sejam versionados.
+"""
 
-.pytest_cache
+# Arquivos e diretórios gerados pelo Python
+__pycache__/            # Cache de bytecode Python
+*.py[cod]               # Arquivos compilados do Python
+*$py.class              # Arquivos de classe Python
 
-.vscode
+# Ambientes virtuais
+__pypackages__/         # Pacotes locais gerados pelo Pipenv
+.venv                   # Diretório do ambiente virtual
 
-.env
-.venv
-.env.development
-.env.testing
-
-A fazer.txt
+# Arquivos de configuração e cache
+.pytest_cache           # Cache gerado pelo pytest
+.vscode                 # Configurações do Visual Studio Code
+.env                    # Variáveis de ambiente sensíveis
+.env.development        # Configurações de ambiente de desenvolvimento
+.env.testing            # Configurações de ambiente de teste

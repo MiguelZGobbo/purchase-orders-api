@@ -1,3 +1,6 @@
--r production.txt
+# Dependências para o ambiente de desenvolvimento, incluindo testes.
 
-pytest==8.3.5
+-r production.txt       # Inclui todas as dependências do ambiente de produção
+
+# Ferramentas de teste
+pytest==8.3.5          # Framework para execução de testes automatizados

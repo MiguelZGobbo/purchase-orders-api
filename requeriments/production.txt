@@ -1,21 +1,30 @@
-aniso8601==10.0.0
-blinker==1.9.0
-click==8.1.8
-colorama==0.4.6
-distlib==0.3.9
-filelock==3.18.0
-Flask==3.1.0
-Flask-RESTful==0.3.10
-itsdangerous==2.2.0
-Jinja2==3.1.6
-MarkupSafe==3.0.2
-platformdirs==4.3.6
-pytz==2025.1
-six==1.17.0
-virtualenv==20.29.3
-Werkzeug==3.1.3
-psycopg2-binary==2.9.10
-Flask-SQLAlchemy==3.1.1
-Flask-Migrate==4.1.0
-Flask-JWT-Extended == 4.7.1
-passlib == 1.7.4
+# Dependências necessárias para o ambiente de produção da aplicação Flask.
+
+# Framework e extensões relacionadas
+aniso8601==10.0.0      # Biblioteca para parsing de datas ISO 8601
+blinker==1.9.0         # Sistema de sinais para comunicação entre componentes
+click==8.1.8           # Utilitário para criação de interfaces de linha de comando
+Flask==3.1.0           # Framework web principal
+Flask-RESTful==0.3.10  # Extensão para criação de APIs RESTful
+itsdangerous==2.2.0    # Utilitário para assinatura de dados (usado pelo Flask)
+Jinja2==3.1.6          # Motor de templates do Flask
+MarkupSafe==3.0.2      # Utilitário para escaping seguro de HTML
+Werkzeug==3.1.3        # Biblioteca WSGI para manipulação de requisições HTTP
+
+# Banco de dados e migrações
+psycopg2-binary==2.9.10    # Adaptador PostgreSQL para Python
+Flask-SQLAlchemy==3.1.1    # Integração do SQLAlchemy com Flask
+Flask-Migrate==4.1.0       # Gerenciamento de migrações de banco de dados
+
+# Autenticação e segurança
+Flask-JWT-Extended==4.7.1  # Suporte a autenticação via JWT
+passlib==1.7.4             # Biblioteca para hashing de senhas
+
+# Utilitários
+colorama==0.4.6        # Suporte a cores em terminais
+distlib==0.3.9         # Utilitários para gerenciamento de pacotes
+filelock==3.18.0       # Bloqueio de arquivos para processos concorrentes
+platformdirs==4.3.6    # Localização de diretórios multiplataforma
+pytz==2025.1           # Suporte a fusos horários
+six==1.17.0            # Utilitário de compatibilidade Python 2/3
+virtualenv==20.29.3    # Ferramenta para ambientes virtuais

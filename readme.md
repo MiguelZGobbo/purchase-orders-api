@@ -72,15 +72,24 @@ A documentação detalhada dos endpoints está disponível no Postman:
 ## Estrutura do Projeto
 
 ```bash
-python-course-first-API/
+purchase-orders-api/
 │
-├── app.py                # Ponto de entrada principal
-├── models/               # Modelos de dados (ORM)
-├── routes/               # Definição de endpoints
-├── database/             # Configuração do banco e inicialização
-├── .env.example          # Exemplo de variáveis de ambiente
-├── requirements.txt      # Dependências
-└── README.md             # Documentação do projeto
+├── exceptions/                 # Tratamento de exceções personalizadas
+├── migrations/                 # Migrações do banco de dados
+├── purchase_orders/            # Módulo principal de pedidos de compra
+├── purchase_orders_items/      # Módulo responsável pelos itens dos pedidos
+├── requirements/               # Dependências e configurações adicionais
+├── tests/                      # Testes unitários e de integração
+├── users/                      # Módulo de autenticação e gerenciamento de usuários
+│
+├── .env.example                # Exemplo de variáveis de ambiente
+├── .gitignore                  # Define arquivos e pastas ignorados pelo Git
+├── app.py                      # Ponto de entrada da aplicação Flask
+├── db.py                       # Configuração da conexão com o banco de dados
+├── pytest.ini                  # Configuração do pytest
+└── readme.md                   # Documentação do projeto
+
+```
 
 ---
 

@@ -19,6 +19,9 @@ env/
 .pytest_cache/
 test.db
 
+# Flask runtime
+instance/
+
 # Environment
 .env
 .env.*

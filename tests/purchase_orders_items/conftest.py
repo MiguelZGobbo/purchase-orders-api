@@ -1,9 +1,11 @@
 """Configurações e fixtures para os testes de purchase_orders_items."""
 
 import pytest
-from db import db 
+
+from db import db
 from purchase_orders.model import PurchaseOrderModel
 from purchase_orders_items.model import PurchaseOrdersItemsModel
+
 
 @pytest.fixture()
 def seed_db():
@@ -24,16 +26,17 @@ def seed_db():
 
     yield {'purchase_order': po, 'items': poi}
 
-@pytest.fixture(scope = "function", autouse = True)
-def clear_db():
+
+@pytest.fixture(scope='function', autouse=True)
+def clear_db(request):
     """
     Limpa as tabelas de itens e pedidos antes de cada teste.
 
-    Executa automaticamente antes de cada teste, garantindo isolamento e prevenindo
-    que dados de um teste interfiram em outro. A limpeza é realizada deletando todos
-    os registros das tabelas PurchaseOrdersItemsModel e PurchaseOrderModel.
+    Executa automaticamente, a menos que o teste tenha o marcador 'nocleardb',
+    garantindo isolamento e prevenindo que dados de um teste interfiram em outro.
     """
+    if 'nocleardb' in request.keywords:
+        return
     db.session.query(PurchaseOrdersItemsModel).delete()
     db.session.query(PurchaseOrderModel).delete()
     db.session.commit()
-    

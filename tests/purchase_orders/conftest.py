@@ -1,8 +1,8 @@
 """Configurações e fixtures para os testes de purchase_orders."""
 
-import pytest 
-from db import db
+import pytest
 
+from db import db
 from purchase_orders.model import PurchaseOrderModel
 from purchase_orders_items.model import PurchaseOrdersItemsModel
 
@@ -21,7 +21,8 @@ def seed_db():
 
     yield po
 
-@pytest.fixture(scope="function", autouse="True")
+
+@pytest.fixture(scope='function', autouse='True')
 def clear_db(request):
     """
     Limpa as tabelas de itens e pedidos antes de cada teste.

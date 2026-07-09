@@ -1,8 +1,12 @@
 """Configurações e fixtures globais para os testes da aplicação."""
 
+import os
+
 import pytest
 from flask_jwt_extended import create_access_token
+
 from app import create_app
+
 
 @pytest.fixture(scope='module')
 def get_headers():
@@ -15,12 +19,22 @@ def get_headers():
     """
     token = create_access_token(identity='user_test')
 
-    return {
-        'Authorization': 'Bearer {}'.format(token)
-    }
+    return {'Authorization': f'Bearer {token}'}
+
+
+@pytest.fixture(scope='module', autouse=True)
+def app_env():
+    """
+    Configura variáveis de ambiente necessárias para os testes.
+
+    Define um banco SQLite em memória para isolar os testes do banco de
+    desenvolvimento/produção.
+    """
+    os.environ['DB_URI'] = 'sqlite:///test.db'
+
 
 @pytest.fixture(scope='module')
-def test_client():
+def test_client(app_env):
     """
     Fornece um cliente de teste para a aplicação Flask.
 

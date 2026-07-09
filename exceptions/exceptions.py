@@ -11,4 +11,5 @@ class QuantityException(HTTPException):
     associada a quantidades que excedem limites ou são inadequadas no contexto
     do pedido de compra.
     """
+
     code = 400

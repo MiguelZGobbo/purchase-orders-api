@@ -1,0 +1,11 @@
+Flask==3.1.0
+Flask-RESTful==0.3.10
+Flask-SQLAlchemy==3.1.1
+Flask-Migrate==4.1.0
+Flask-JWT-Extended==4.7.1
+Flask-CORS==5.0.1
+flasgger==0.9.7.1
+psycopg2-binary==2.9.10
+passlib==1.7.4
+python-dotenv==1.1.0
+Werkzeug==3.1.3

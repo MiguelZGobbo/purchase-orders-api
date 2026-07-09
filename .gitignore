@@ -1,23 +1,31 @@
-# Configuração de arquivos e diretórios a serem ignorados pelo Git.
-# 
-# Define padrões para excluir arquivos temporários, caches, ambientes virtuais
-# e configurações locais do controle de versão, garantindo que apenas arquivos
-# relevantes sejam versionados.
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
 
-# Arquivos e diretórios gerados pelo Python
-__pycache__/            
-*.py[cod]               
-*$py.class              
+# Virtual environments
+.venv
+venv/
+env/
 
-# Ambientes virtuais
-__pypackages__/         
-.venv                   
+# IDE
+.vscode/
+.idea/
 
-# Arquivos de configuração e cache
-.pytest_cache           
-.vscode                 
+# Testing
+.pytest_cache/
+test.db
 
-# Variáveis de ambiente sensíveis
-.env                    
-.env.development        
-.env.testing            
+# Environment
+.env
+.env.*
+
+# Docker
+pgdata/
+
+# OS
+.DS_Store
+Thumbs.db            

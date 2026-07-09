@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: purchase_user
+          POSTGRES_PASSWORD: purchase_pass
+          POSTGRES_DB: purchase_orders
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements/development.txt
+
+      - name: Run tests
+        env:
+          DB_URI: postgresql://purchase_user:purchase_pass@localhost:5432/purchase_orders
+          JWT_SECRET_KEY: test-secret-key
+          FLASK_ENV: testing
+        run: pytest -v

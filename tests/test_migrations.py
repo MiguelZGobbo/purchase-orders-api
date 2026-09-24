@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from flask_migrate import upgrade
+from flask_migrate import downgrade, stamp, upgrade
 from sqlalchemy import inspect, text
 
 from app import create_app
@@ -74,4 +74,54 @@ def test_upgrade_keeps_users_created_before_the_users_revision(tmp_path, monkeyp
 
         assert db.session.execute(text('SELECT email FROM users')).scalar_one() == (
             'existing@example.com'
+        )
+
+
+def test_downgrade_preserves_users_created_before_the_users_revision(tmp_path, monkeypatch):
+    database = tmp_path / 'legacy-users.db'
+    monkeypatch.setenv('DB_URI', f'sqlite:///{database.as_posix()}')
+    monkeypatch.setenv('JWT_SECRET_KEY', 'migration-test-secret')
+    app = create_app()
+
+    with app.app_context():
+        migrations = str(Path(__file__).resolve().parents[1] / 'migrations')
+        upgrade(directory=migrations, revision='f606aa9493f1')
+        UserModel.__table__.create(db.engine)
+        db.session.execute(
+            text("INSERT INTO users (email, password) VALUES ('existing@example.com', 'hash')")
+        )
+        db.session.commit()
+
+        upgrade(directory=migrations)
+        downgrade(directory=migrations, revision='f606aa9493f1')
+
+        assert inspect(db.engine).has_table('users')
+        assert db.session.execute(text('SELECT email FROM users')).scalar_one() == (
+            'existing@example.com'
+        )
+
+
+def test_stamp_head_preserves_an_unversioned_schema_matching_current_models(
+    tmp_path,
+    monkeypatch,
+):
+    database = tmp_path / 'legacy-schema.db'
+    monkeypatch.setenv('DB_URI', f'sqlite:///{database.as_posix()}')
+    monkeypatch.setenv('JWT_SECRET_KEY', 'migration-test-secret')
+    app = create_app()
+
+    with app.app_context():
+        db.create_all()
+        db.session.execute(
+            text("INSERT INTO users (email, password) VALUES ('legacy@example.com', 'hash')")
+        )
+        db.session.commit()
+
+        stamp(directory=str(Path(__file__).resolve().parents[1] / 'migrations'), revision='head')
+
+        assert db.session.execute(text('SELECT version_num FROM alembic_version')).scalar_one() == (
+            '7b134dfa54cd'
+        )
+        assert db.session.execute(text('SELECT email FROM users')).scalar_one() == (
+            'legacy@example.com'
         )

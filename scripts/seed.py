@@ -1,8 +1,10 @@
 import os
 import sys
+from pathlib import Path
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
+from dotenv import load_dotenv
 from flask_migrate import upgrade
 
 from app import create_app
@@ -13,6 +15,7 @@ from users.model import UserModel
 
 
 def seed():
+    load_dotenv(dotenv_path=Path.cwd() / '.env')
     app = create_app()
 
     with app.app_context():

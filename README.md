@@ -8,6 +8,8 @@
 
 API REST para registrar e consultar pedidos de compra e seus itens, com autenticação JWT e persistência relacional.
 
+![Visão geral da arquitetura da Purchase Orders API](docs/images/purchase-orders-api-architecture.png)
+
 ## Sobre o projeto
 
 ### O que é?

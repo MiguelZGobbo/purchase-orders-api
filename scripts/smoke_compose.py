@@ -51,7 +51,7 @@ def wait_for_api():
             status, body = request('GET', '/health')
             if status == 200 and body.get('status') == 'healthy':
                 return
-        except (URLError, TimeoutError, json.JSONDecodeError):
+        except (ConnectionError, URLError, TimeoutError, json.JSONDecodeError):
             pass
         time.sleep(1)
 

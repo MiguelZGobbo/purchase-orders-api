@@ -1,7 +1,11 @@
 import os
 import sys
+from pathlib import Path
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
+
+from dotenv import load_dotenv
+from flask_migrate import upgrade
 
 from app import create_app
 from db import db
@@ -11,10 +15,11 @@ from users.model import UserModel
 
 
 def seed():
+    load_dotenv(dotenv_path=Path.cwd() / '.env')
     app = create_app()
 
     with app.app_context():
-        db.create_all()
+        upgrade(directory=os.path.join(os.path.dirname(__file__), '..', 'migrations'))
 
         if UserModel.find_user_by_email('admin@example.com'):
             print('Banco já possui dados. Pulando seed.')

@@ -6,6 +6,7 @@ import pytest
 from flask_jwt_extended import create_access_token
 
 from app import create_app
+from db import db
 
 
 @pytest.fixture(scope='module')
@@ -30,7 +31,8 @@ def app_env():
     Define um banco SQLite em memória para isolar os testes do banco de
     desenvolvimento/produção.
     """
-    os.environ['DB_URI'] = 'sqlite:///test.db'
+    os.environ['DB_URI'] = 'sqlite:///:memory:'
+    os.environ['JWT_SECRET_KEY'] = 'test-only-jwt-secret-value-long-enough'
 
 
 @pytest.fixture(scope='module')
@@ -46,4 +48,5 @@ def test_client(app_env):
 
     with client.test_client() as testing_client:
         with client.app_context():
+            db.create_all()
             yield testing_client

@@ -1,6 +1,8 @@
+from math import isfinite
 from typing import Any
 
-from exceptions.exceptions import QuantityException
+from db import db
+from exceptions.exceptions import InvalidInputException, QuantityException
 from purchase_orders.model import PurchaseOrderModel
 
 from .model import PurchaseOrdersItemsModel
@@ -13,6 +15,9 @@ class PurchaseOrdersItemsServices:
         purchase_order_quantity: int,
         quantity: int,
     ) -> None:
+        if quantity <= 0:
+            raise QuantityException('A quantidade deve ser maior que zero')
+
         purchase_orders_items = PurchaseOrdersItemsModel.find_by_purchase_order_id(
             purchase_order_id,
         )
@@ -40,7 +45,17 @@ class PurchaseOrdersItemsServices:
         purchase_order_id: int,
         quantity: int,
     ) -> dict[str, Any] | tuple[dict[str, str], int]:
-        purchase_order = PurchaseOrderModel.find_by_id(purchase_order_id)
+        description = description.strip()
+        if not description:
+            raise InvalidInputException('Informe uma descrição válida!')
+        if not isfinite(price) or price < 0:
+            raise InvalidInputException('Informe um preço válido!')
+
+        purchase_order = db.session.execute(
+            db.select(PurchaseOrderModel)
+            .where(PurchaseOrderModel.id == purchase_order_id)
+            .with_for_update()
+        ).scalar_one_or_none()
         if purchase_order:
             PurchaseOrdersItemsServices._check_maximum_purchase_order_quantity(
                 purchase_order_id,

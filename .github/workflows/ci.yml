@@ -28,6 +28,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Prepare Compose test environment
+        run: |
+          printf 'JWT_SECRET_KEY=%s\nPOSTGRES_HOST_PORT=5433\n' \
+            'compose-smoke-test-secret-key-at-least-32-bytes' > .env
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
@@ -41,6 +46,25 @@ jobs:
       - name: Run tests
         env:
           DB_URI: postgresql://purchase_user:purchase_pass@localhost:5432/purchase_orders
-          JWT_SECRET_KEY: test-secret-key
+          TEST_POSTGRES_URI: postgresql://purchase_user:purchase_pass@localhost:5432/purchase_orders
+          JWT_SECRET_KEY: ci-test-secret-key-at-least-32-bytes
           FLASK_ENV: testing
-        run: pytest -v
+        run: pytest -q -rs
+
+      - name: Build Compose API image
+        run: docker compose build api
+
+      - name: Migrate and start Compose stack
+        run: |
+          docker compose up -d db
+          docker compose run --rm api flask db upgrade
+          docker compose up -d api
+
+      - name: Smoke test Compose API
+        env:
+          API_BASE_URL: http://127.0.0.1:5000
+        run: python scripts/smoke_compose.py
+
+      - name: Tear down Compose stack
+        if: always()
+        run: docker compose down --volumes --remove-orphans

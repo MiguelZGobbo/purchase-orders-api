@@ -35,3 +35,4 @@ def clear_db(request):
     db.session.query(PurchaseOrdersItemsModel).delete()
     db.session.query(PurchaseOrderModel).delete()
     db.session.commit()
+    db.session.remove()

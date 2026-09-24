@@ -17,8 +17,7 @@ class UserEmailOrPasswordInvalidException(HTTPException):
     """
     Exceção levantada quando o email ou a senha fornecidos são inválidos.
 
-    Define o código HTTP 404 para indicar que o recurso (usuário) não foi encontrado
-    ou a autenticação falhou.
+    Define o código HTTP 401 para indicar que as credenciais de autenticação são inválidas.
     """
 
-    code = 404
+    code = 401

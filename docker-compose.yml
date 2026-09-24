@@ -14,7 +14,7 @@ services:
   db:
     image: postgres:16-alpine
     ports:
-      - "5432:5432"
+      - "${POSTGRES_HOST_PORT:-5432}:5432"
     environment:
       POSTGRES_USER: purchase_user
       POSTGRES_PASSWORD: purchase_pass

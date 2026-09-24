@@ -13,3 +13,9 @@ class QuantityException(HTTPException):
     """
 
     code = 400
+
+
+class InvalidInputException(HTTPException):
+    """Exceção levantada quando um valor de entrada viola o contrato da API."""
+
+    code = 400

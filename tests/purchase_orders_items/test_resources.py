@@ -78,6 +78,30 @@ def test_post_purchase_order_item_invalid_quantity(test_client, get_headers, see
     assert response.json['message'] == 'Você só pode adicionar mais 20 itens'
 
 
+def test_post_purchase_order_item_at_quantity_limit(test_client, get_headers, seed_db):
+    purchase_order_id = seed_db['purchase_order'].id
+    response = test_client.post(
+        f'/purchase_orders/{purchase_order_id}/items',
+        json={'description': 'Último item', 'price': 10, 'quantity': 20},
+        headers=get_headers,
+    )
+
+    assert response.status_code == 200
+    items_response = test_client.get(
+        f'/purchase_orders/{purchase_order_id}/items',
+        headers=get_headers,
+    )
+    assert sum(item['quantity'] for item in items_response.json) == 50
+
+    overflow_response = test_client.post(
+        f'/purchase_orders/{purchase_order_id}/items',
+        json={'description': 'Excedente', 'price': 10, 'quantity': 1},
+        headers=get_headers,
+    )
+    assert overflow_response.status_code == 400
+    assert overflow_response.json['message'] == 'Você só pode adicionar mais 0 itens'
+
+
 def test_post_invalid_quantity(test_client, get_headers, seed_db):
     """
     Testa a criação de um item com quantidade não informada.
@@ -136,6 +160,53 @@ def test_post_invalid_price(test_client, get_headers, seed_db):
 
     assert response.status_code == 400
     assert response.json['message']['price'] == 'Informe um preço válido!'
+
+
+def test_post_purchase_order_item_with_zero_quantity(test_client, get_headers, seed_db):
+    """Deve rejeitar itens sem quantidade positiva."""
+    response = test_client.post(
+        f'/purchase_orders/{seed_db["purchase_order"].id}/items',
+        json={'description': 'Item teste', 'price': 10.40, 'quantity': 0},
+        headers=get_headers,
+    )
+
+    assert response.status_code == 400
+    assert response.json['message'] == 'A quantidade deve ser maior que zero'
+
+
+def test_post_purchase_order_item_with_negative_quantity(test_client, get_headers, seed_db):
+    """Deve rejeitar quantidades negativas que reduziriam o total já utilizado."""
+    response = test_client.post(
+        f'/purchase_orders/{seed_db["purchase_order"].id}/items',
+        json={'description': 'Item teste', 'price': 10.40, 'quantity': -10},
+        headers=get_headers,
+    )
+
+    assert response.status_code == 400
+    assert response.json['message'] == 'A quantidade deve ser maior que zero'
+
+
+def test_post_purchase_order_item_with_negative_price(test_client, get_headers, seed_db):
+    """Deve rejeitar preços negativos."""
+    response = test_client.post(
+        f'/purchase_orders/{seed_db["purchase_order"].id}/items',
+        json={'description': 'Item teste', 'price': -1, 'quantity': 1},
+        headers=get_headers,
+    )
+
+    assert response.status_code == 400
+    assert response.json['message'] == 'Informe um preço válido!'
+
+
+def test_post_purchase_order_item_with_blank_description(test_client, get_headers, seed_db):
+    response = test_client.post(
+        f'/purchase_orders/{seed_db["purchase_order"].id}/items',
+        json={'description': '   ', 'price': 10, 'quantity': 1},
+        headers=get_headers,
+    )
+
+    assert response.status_code == 400
+    assert response.json['message'] == 'Informe uma descrição válida!'
 
 
 def test_post_purchase_order_not_found(test_client, get_headers):

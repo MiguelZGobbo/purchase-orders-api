@@ -3,6 +3,8 @@ import sys
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
+from flask_migrate import upgrade
+
 from app import create_app
 from db import db
 from purchase_orders.model import PurchaseOrderModel
@@ -14,7 +16,7 @@ def seed():
     app = create_app()
 
     with app.app_context():
-        db.create_all()
+        upgrade(directory=os.path.join(os.path.dirname(__file__), '..', 'migrations'))
 
         if UserModel.find_user_by_email('admin@example.com'):
             print('Banco já possui dados. Pulando seed.')

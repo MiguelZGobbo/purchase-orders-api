@@ -19,7 +19,7 @@ def test_post_purchase_orders(test_client, get_headers):
 
     Testa se o retorno contém ID gerado e dados iguais aos enviados.
     """
-    obj = {'description': '', 'quantity': 150}
+    obj = {'description': 'Materiais de escritório', 'quantity': 150}
     response = test_client.post(
         '/purchase_orders',
         data=json.dumps(obj),
@@ -35,7 +35,7 @@ def test_post_purchase_orders(test_client, get_headers):
 
 def test_post_purchase_orders_with_invalid_quantity(test_client, get_headers):
     """Deve retornar erro ao tentar criar um pedido com quantidade inválida."""
-    obj = {'description': '', 'quantity': 200}
+    obj = {'description': 'Materiais de escritório', 'quantity': 200}
     response = test_client.post(
         '/purchase_orders',
         data=json.dumps(obj),
@@ -50,11 +50,14 @@ def test_post_purchase_orders_with_invalid_quantity(test_client, get_headers):
 def test_post_empty_description(test_client, get_headers):
     """Deve retornar erro ao criar pedido sem descrição."""
     response = test_client.post(
-        'purchase_orders', data=json.dumps({}), content_type='application/json', headers=get_headers
+        '/purchase_orders',
+        data=json.dumps({'description': '   ', 'quantity': 50}),
+        content_type='application/json',
+        headers=get_headers,
     )
 
     assert response.status_code == 400
-    assert response.json['message']['description'] == 'Informe uma descrição válida'
+    assert response.json['message'] == 'Informe uma descrição válida'
 
 
 def test_get_purchase_order_by_id(test_client, get_headers, seed_db):

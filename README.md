@@ -141,7 +141,10 @@ curl -X POST http://localhost:5000/purchase_orders/1/items \
 ### Com Docker (recomendado)
 
 ```bash
-docker compose up --build
+cp .env.example .env
+# Defina JWT_SECRET_KEY em .env
+docker compose up --build -d
+docker compose exec api flask db upgrade
 ```
 
 A aplicação estará disponível em **http://localhost:5000**.
@@ -163,7 +166,8 @@ pip install -r requirements.txt
 cp .env.example .env
 # Edite DB_URI com suas credenciais PostgreSQL
 
-# 5. Executar
+# 5. Criar ou atualizar o schema e executar
+flask db upgrade
 flask run
 ```
 
@@ -172,6 +176,15 @@ flask run
 ```bash
 make seed
 ```
+
+O comando de seed aplica as migrações pendentes antes de inserir os dados.
+
+### Banco criado pela versão antiga
+
+Se o banco já foi criado por `db.create_all()` e não possui uma revisão Alembic,
+confira e faça backup do schema antes de registrá-lo. Caso ele já corresponda
+aos modelos atuais, execute `flask db stamp head` uma vez e depois
+`flask db check`. Para bancos vazios ou já versionados, use `flask db upgrade`.
 
 ---
 

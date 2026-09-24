@@ -1,6 +1,6 @@
 from typing import Any
 
-from exceptions.exceptions import QuantityException
+from exceptions.exceptions import InvalidInputException, QuantityException
 
 from .model import PurchaseOrderModel
 
@@ -18,6 +18,9 @@ class PurchaseOrdersServices:
 
     @staticmethod
     def create(description: str, quantity: int) -> dict[str, Any]:
+        description = description.strip()
+        if not description:
+            raise InvalidInputException('Informe uma descrição válida')
         PurchaseOrdersServices._check_quantity(quantity)
         purchase_order = PurchaseOrderModel(description, quantity)
         purchase_order.save()
